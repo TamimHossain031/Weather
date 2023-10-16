@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Weather Application</title>
+</head>
+<body>
+    <div class="card">
+        <p style="text-align: left;margin-bottom:30px;">Enter Capital :</p>
+        <div class="search">
+            <input type="text" placeholder="Enter city name .....">
+            <button><img src="./images/search.png" alt="search"></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="weather-picture" class="weather-icon">
+            <h1 class="temp">22°c</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="">
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       
+        
+        
+    const app = () =>{
+
+        // assign value
+        const temp_h = document.querySelector('.temp');
+        const city_h= document.querySelector('.city');
+        const humidity_h = document.querySelector('.humidity');
+        const wind_h = document.querySelector('.wind');
+        const search = document.querySelector('.search input');
+        const image = document.querySelector('.weather-icon');
+
+        async function call(city_name){
+            console.log(city_name);
+            const apiKey = '018712dba44b8301f5f7a3db4c0cfa7a';
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city_name}&appid=${apiKey}&units=metric`;
+            const request = await fetch(apiUrl);
+            const data = await request.json()
+            console.log(data);
+            //const {temp,city,humidity,wind}={main.temp,data.name,data.main.humidity,data.wind.speed}
+            const {main:{temp},name,main:{humidity},wind:{speed}} = data;
+            
+            
+            temp_h.textContent = Math.round(temp) + '°C';
+            city_h.textContent = name;
+            humidity_h.textContent = humidity+' %';
+            wind_h.textContent = speed+' km/h';
+            if(data.weather[0].main == 'Haze'){
+                image.src = 'images/clouds.png'
+            }else if(data.weather[0].main == 'Clear'){
+                image.src = 'images/clear.png'
+            }else if(data.weather[0].main == 'Rain'){
+                image.src = 'images/rain.png'
+            }else if(data.weather[0].main == 'Drizzle'){
+                image.src = 'images/drizzle.png'
+            }else if(data.weather[0].main == 'Mist'){
+                image.src = 'images/drizzle.png'
+            }
+            
+        }
+        document.querySelector('.search button').addEventListener('click',()=>{
+            call(search.value)
+        })
+    
+        
+    }
+       
+
+    window.onload = app();
+    </script>
+</body>
+</html>
